@@ -1,0 +1,319 @@
+<template>
+    <lightning-card>
+        <div class="modal-header slds-modal__header">
+            <h2 class="title slds-text-heading--medium slds-hyphenate">Contact Consent</h2>
+        </div>
+        <template if:true={isLoading}>
+            <div class="slds-p-around_x-large">
+                <lightning-spinner alternative-text="Loading" size="large" variant="brand"></lightning-spinner>
+            </div>
+        </template>
+        <div class="scrollable slds-p-around_large">
+            <template if:false={showSummary}>
+                <template if:true={contactConsentData}>
+                    <template for:each={contactConsentData.preferences} for:item="preference">
+                        <table key={preference.preference} class="slds-table slds-table_cell-buffer slds-no-row-hover slds-table_col-bordered slds-m-bottom_medium slds-text-body_small" style="border: 1px solid;">
+                            <thead>
+                                <tr class="slds-line-height_reset"  style="border: 1px solid;">
+                                    <th class="" scope="col">
+                                        <div class="slds-grid slds-gutters">
+                                            <div class="slds-col">
+                                                <div class="slds-truncate" title="purpose">Purpose</div>
+                                            </div>
+                                            <div class="slds-col">
+                                                <div class="slds-text-align_right">
+                                                    <lightning-button-menu data-target-id={preference.preference} icon-size="x-small" alternative-text="Action" onselect={handlePurpose}>
+                                                        <template for:each={status} for:item="action">
+                                                            <lightning-menu-item label={action.label} value={action.value} key={action.label}>
+                                                            </lightning-menu-item>
+                                                        </template>
+                                                    </lightning-button-menu>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </th>
+                                    <template for:each={preference.channels} for:item="channel">
+                                        <th key={channel.key} class="" scope="col">
+                                            <div class="slds-grid slds-gutters">
+                                                <div class="slds-col">
+                                                    <b>{channel.value}</b>
+                                                </div>
+                                                <div class="slds-col">
+                                                    <div class="slds-text-align_right">
+                                                        <lightning-button-menu data-target-id={channel.key} icon-size="x-small" alternative-text="Action" onselect={handleChannel}>
+                                                            <template for:each={status} for:item="action">
+                                                                <lightning-menu-item label={action.label} value={action.value} key={action.label}>
+                                                                </lightning-menu-item>
+                                                            </template>
+                                                        </lightning-button-menu>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </th>
+                                    </template>
+                                </tr>
+                                <tr class="slds-line-height_reset" style="border: 1px solid;">
+                                    <th class="" scope="col">
+                                        <div class="slds-grid slds-gutters">
+                                            <div class="slds-col">
+                                                <div class="slds-truncate" title="purpose">{preference.preference} Preferences</div>
+                                            </div>
+                                        </div>
+                                    </th>
+                                    <template for:each={preference.channels} for:item="channel">
+                                        <th key={channel.key} class="" scope="col">
+                                            <div class="slds-grid slds-gutters">
+                                                <div class="slds-col">
+                                                    <b>Legal Basis</b>
+                                                </div>
+                                                <div class="slds-col">
+                                                    <div class="slds-text-align_center">
+                                                        <b>Preference</b>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </th>
+                                    </template>
+                                </tr>
+                            </thead>
+                            <template for:each={preference.contactPointTypeConsents} for:item="contactPointTypeConsent">
+                                <tr key={contactPointTypeConsent.dataUsePurposeId} style="border-bottom-style: double;">
+                                    <td scope="col">
+                                        <div class="slds-grid slds-gutters">
+                                            <div class="slds-col">
+                                                <div class="slds-truncate" title="purpose">
+                                                    <a onclick={navigateToPurpose} data-target-id={contactPointTypeConsent.dataUsePurposeId}>{contactPointTypeConsent.dataUsePurpose}</a>
+                                                </div>
+                                            </div>
+                                            <div class="slds-col">
+                                                <div class="slds-text-align_right">
+                                                    <lightning-button-menu data-target-id={contactPointTypeConsent.dataUsePurposeId} icon-size="x-small" alternative-text="Action" onselect={handleIndividualPurpose}>
+                                                        <template for:each={status} for:item="action">
+                                                            <lightning-menu-item label={action.label} value={action.value} key={action.label}>
+                                                            </lightning-menu-item>
+                                                        </template>
+                                                    </lightning-button-menu>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <template for:each={contactPointTypeConsent.contactConsents} for:item="contactConsent">
+                                        <td width="18%" key={contactConsent.key} class="" scope="col">
+                                            <div class="slds-grid slds-gutters">
+                                                <div class="slds-col">
+                                                    {contactConsent.legalBasis}
+                                                </div>
+                                                <div class="slds-col">
+                                                    <div class="slds-text-align_right">
+                                                        <div>
+                                                            <span class={contactConsent.privacyConsentStatusNewValue}>{contactConsent.privacyConsentStatus}</span>
+                                                            <lightning-button-menu data-target-id={contactConsent.key} icon-size="x-small" value={contactConsent.privacyConsentStatusNewValue} alternative-text="Action" onselect={handlePreference} class="slds-m-left_small">
+                                                                <template if:true={contactConsent.isNew}>
+                                                                    <lightning-menu-item label="Unselected" value="Unselected">
+                                                                    </lightning-menu-item>
+                                                                </template>
+                                                                <template for:each={status} for:item="action">
+                                                                    <lightning-menu-item label={action.label} value={action.value} key={action.label}>
+                                                                    </lightning-menu-item>
+                                                                </template>
+                                                            </lightning-button-menu>
+                                                            <template if:true={contactConsent.isChanged}>
+                                                                <lightning-button-icon class="slds-m-left_small" data-target-id={contactConsent.key} variant="bare" size="small" icon-name="utility:undo" alternative-text="Undo" title="Undo" onclick={undoPreference}></lightning-button-icon>
+                                                            </template>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </template>
+                                </tr>
+                            </template>
+                        </table>
+                    </template>
+                </template>
+            </template>
+            <template if:true={showSummary}>
+                <template for:each={warnings} for:item="warning">
+                    <div key={warning.index} class="slds-notify_alert slds-alert_warning slds-m-bottom_small" role="alert">
+                        <h2>{warning}</h2>
+                    </div>
+                </template>
+                <template if:true={contactConsentSummarries}>
+                    <template for:each={contactConsentSummarries} for:item="contactConsentSummary">
+                        <template if:true={contactConsentSummary.isPrefChanged}>
+                        <div key={contactConsentSummary.preference} class="slds-align_absolute-center">
+                            <table class="slds-table slds-table_cell-buffer slds-no-row-hover slds-table_col-bordered slds-m-bottom_medium slds-text-body_small" style="border: 1px solid;width:50%">
+                                <thead>
+                                    <tr class="slds-line-height_reset"  style="border: 1px solid;">
+                                        <th class="" scope="col" colspan="4">
+                                            <b>{contactConsentSummary.preference} Preferences</b>
+                                        </th>
+                                    </tr>
+                                    <tr class="slds-line-height_reset" style="border: 1px solid;">
+                                        <th class="" scope="col">
+                                            <div class="slds-grid slds-gutters">
+                                                <div class="slds-col">
+                                                    <div class="slds-truncate" title="purpose">Purpose</div>
+                                                </div>
+                                            </div>
+                                        </th>
+                                        <th class="" scope="col">
+                                            <div class="slds-grid slds-gutters">
+                                                <div class="slds-col">
+                                                    <div class="slds-truncate" title="channel">Channel</div>
+                                                </div>
+                                            </div>
+                                        </th>
+                                        <th class="" scope="col">
+                                            <div class="slds-grid slds-gutters">
+                                                <div class="slds-col">
+                                                    <div class="slds-truncate" title="legalBasis">Legal Basis</div>
+                                                </div>
+                                            </div>
+                                        </th>
+                                        <th class="" scope="col">
+                                            <div class="slds-grid slds-gutters">
+                                                <div class="slds-col">
+                                                    <div class="slds-truncate" title="preference">Preference</div>
+                                                </div>
+                                            </div>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <template for:each={contactConsentSummary.purposeSummarries} for:item="purposeSummary">
+                                    <tr key={purposeSummary.dataUsePurposeId} style="border-bottom-style: double;">
+                                        <template lwc:if={purposeSummary.dataUsePurpose}>
+                                            <td width="30%" scope="col" rowspan={purposeSummary.count}>
+                                                <div class="slds-grid slds-gutters">
+                                                    <div class="slds-col">
+                                                        <div class="slds-truncate" title="purpose">
+                                                            <a onclick={navigateToPurpose} data-target-id={purposeSummary.dataUsePurposeId}>{purposeSummary.dataUsePurpose}</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </template>
+                                        <td scope="col">
+                                            <div class="slds-grid slds-gutters">
+                                                <div class="slds-col">
+                                                    <div class="slds-truncate" title="purpose">
+                                                        {purposeSummary.consent.Channel__c}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td scope="col">
+                                            <div class="slds-grid slds-gutters">
+                                                <div class="slds-col">
+                                                    <div class="slds-truncate" title="purpose">
+                                                        {purposeSummary.consent.Legal_Basis__c}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td scope="col" class={purposeSummary.consent.PrivacyConsentStatus}>
+                                            <div class="slds-grid slds-gutters">
+                                                <div class="slds-col">
+                                                    <div class="slds-truncate" title="purpose">
+                                                        {purposeSummary.privacyConsentStatus}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </table>
+                        </div>
+                        </template>
+                    </template>
+                </template>
+                <template if:true={showWarningMessage}>
+                    <div class="slds-notify slds-notify_alert slds-alert_warning slds-p-around_large slds-m-bottom_large slds-align_absolute-center" role="alert" style="width: 70%;">
+                        <lightning-icon icon-name="utility:warning" alternative-text="Warning!" title="Warning" size="small"></lightning-icon>
+                        <h2> There were no preference changes made on the previous screen. To confirm the existing preferences, click 'Save'
+                        </h2>
+                      </div>
+                </template>
+                
+
+
+                
+
+                <div class="container">
+                    <div class="row">
+                        <div class="form-group1 name2 col-md-6"></div>
+                <div style="width: 25%; margin-left: 25%;" class="slds-m-bottom_small">
+                <label> Source</label>
+                
+                <abbr title="required" class="slds-required">*</abbr>
+                    </div> 
+
+
+                <div style="width: 25% ;margin-left: 25%;" class="slds-m-bottom_small">
+                    
+                    
+                        <lightning-record-edit-form object-api-name="ContactPointTypeConsent" id="contactConsentSource"  >
+                            <lightning-input-field field-name="Consent_Capture_Source__c" class="form-control;nameVal" variant="label-hidden" label = "Source"  onchange={handleSourceField} > </lightning-input-field>
+                        </lightning-record-edit-form>
+                    
+                </div>
+                </div>
+                
+                
+                <div class="form-group2 name2 col-md-6">
+                <div style="width: 50%; margin-left: 25%;" class="slds-m-bottom_small">
+                    <label> Campaign</label>
+                        </div> 
+                    <div style="width: 125%;" class="slds-m-bottom_small">
+                        
+                        
+                            <lightning-record-edit-form object-api-name="ContactPointTypeConsent" id="createContactForm"   >
+                                <lightning-input-field field-name="Campaign__c" class="form-control;nameVal" variant="label-hidden" label = "Campaign" onchange={handleCampaignField} > </lightning-input-field>
+                            </lightning-record-edit-form>
+                        
+                    </div>
+                    </div>
+    </div>
+  
+                
+
+
+
+                <div style="width: 25%; margin-left: 25%;" class="slds-m-bottom_small">
+                    <label> Effective From</label>
+                        </div>
+                    <div style="width: 25%; margin-left: 25%;" class="slds-m-bottom_small">
+                        
+                            <lightning-record-edit-form object-api-name="ContactPointTypeConsent" id="createEffectiveDate" >
+                                <lightning-input-field type="datetime"  field-name="EffectiveFrom" variant="label-hidden" value={dateval} onchange={handleEffectiveDateChange}> </lightning-input-field>
+                            </lightning-record-edit-form>
+                       
+                    </div>
+                    <div style="width: 25%; margin-left: 25%;" class="slds-m-bottom_small">
+                        <label>Comments</label>
+                            </div> 
+                        <div style="width: 25%; margin-left: 25%;" class="slds-m-bottom_small">
+                            
+                            
+                                <lightning-record-edit-form object-api-name="ContactPointTypeConsent" id="commentsField"  >
+                                    <lightning-input-field field-name="Comments__c" variant="label-hidden" label = "Comments"  onchange={handleCommentsField} > </lightning-input-field>
+                                </lightning-record-edit-form>
+                            
+                        </div>
+
+
+            </template>
+        </div>
+        <div slot="footer">
+            <template if:false={showSummary}>
+                <lightning-button disabled={disableNext} variant="brand" label="Next" title="Next" class="slds-var-m-left_x-small slds-float_right slds-m-bottom_small" onclick={handleNext}></lightning-button>
+                <lightning-button variant="Neutral" label="Cancel" title="Cancel" class="slds-var-m-left_x-small slds-float_right slds-m-bottom_small" onclick={handleCancel}></lightning-button>
+                <lightning-button variant="Neutral" label="Reset" title="Reset" class="slds-var-m-left_x-small slds-float_right slds-m-bottom_small" onclick={handleReset}></lightning-button>
+            </template>
+            <template if:true={showSummary}>
+                <lightning-button variant="brand" label="Save" title="Save" class="slds-var-m-left_x-small slds-float_right slds-m-bottom_small" onclick={handleSave}></lightning-button>
+                <lightning-button variant="Neutral" label="Back" title="Back" class="slds-var-m-left_x-small slds-float_right slds-m-bottom_small" onclick={handleBack}></lightning-button>
+            </template>
+        </div>
+    </lightning-card>
+</template>

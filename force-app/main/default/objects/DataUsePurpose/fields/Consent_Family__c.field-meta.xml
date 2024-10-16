@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Consent_Family__c</fullName>
+    <description>Marketing Section
+Reflects the different types of marketing communication a supporter can receive.
+
+Specific Activities 
+We are communicating about a specific activities a supporter has signed up for.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Marketing Section
+Reflects the different types of marketing communication a supporter can receive.
+
+Specific Activities 
+We are communicating about a specific activities a supporter has signed up for.</inlineHelpText>
+    <label>Family</label>
+    <required>true</required>
+    <trackHistory>false</trackHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Marketing</fullName>
+                <default>false</default>
+                <label>Marketing</label>
+            </value>
+            <value>
+                <fullName>Activities</fullName>
+                <default>false</default>
+                <label>Activities</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

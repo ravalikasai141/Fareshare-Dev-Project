@@ -1,0 +1,67 @@
+.menu-button {
+    width: 14px;
+    height: 14px;
+}
+.OptIn {
+    background-color: #c9e7c9;
+}
+.Seen {
+    background-color: #ffbf00;
+}
+.OptOut {
+    background-color: #f2d9d9;
+}
+.scrollable {
+    height: 500px;
+    overflow-y:auto;
+}
+table, th, td {
+    border: 1px solid black;
+}
+
+.slds-table_cell-buffer tr>td:first-child {
+    padding-left: var(--lwc-spacingSmall,0.75rem)
+}
+.div1 {
+    
+    width:475px;
+    height:90px;
+    
+}
+.div2 {
+    
+    width:421px;
+    height:90px;
+   
+}
+
+.name1 {
+    float: left;
+   
+    
+}   
+
+.name2 {
+    float: right;
+    
+}
+
+.nameVal {
+    width: 150px;
+    height: 40px;
+    
+}
+
+.form-group1 {
+    margin-left: 25%;
+    margin-right: 5%;
+}
+.form-group2 {
+    margin-left: 5%;
+    margin-right: 29%;
+    margin-top: -76px
+}
+
+.containerr {
+    display: inline-block;
+}
